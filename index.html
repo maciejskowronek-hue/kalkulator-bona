@@ -1,0 +1,188 @@
+<div id="bona-kalk" style="max-width:620px;margin:0 auto;font-family:Georgia,serif;color:#2C2C2A;padding:1rem 0;">
+
+  <p style="font-size:13px;color:#888780;line-height:1.6;margin-bottom:2rem;">Podaj wymiary, wybierz model i sprawdź orientacyjną cenę.<br>Każda kołdra szyta jest po złożeniu zamówienia – realizacja 7–10 dni roboczych.</p>
+
+  <!-- WYMIARY -->
+  <p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#888780;margin-bottom:0.6rem;">Wymiary kołdry</p>
+  <div style="display:flex;gap:16px;margin-bottom:1.5rem;flex-wrap:wrap;">
+    <div style="flex:1;min-width:140px;">
+      <label style="display:block;font-size:13px;color:#5F5E5A;margin-bottom:6px;" for="bk-szer">Szerokość</label>
+      <div style="display:flex;align-items:center;border:1.5px solid #D3D1C7;border-radius:8px;background:#fff;overflow:hidden;">
+        <input id="bk-szer" type="number" min="80" max="320" placeholder="np. 160"
+          style="border:none;outline:none;padding:10px 12px;font-size:16px;width:100%;background:transparent;color:#2C2C2A;font-family:Georgia,serif;">
+        <span style="padding:0 12px;font-size:13px;color:#888780;border-left:1.5px solid #D3D1C7;white-space:nowrap;">cm</span>
+      </div>
+      <p id="bk-err-s" style="font-size:12px;color:#C0392B;margin-top:4px;display:none;">Podaj szerokość (80–320 cm)</p>
+    </div>
+    <div style="flex:1;min-width:140px;">
+      <label style="display:block;font-size:13px;color:#5F5E5A;margin-bottom:6px;" for="bk-dlugo">Długość</label>
+      <div style="display:flex;align-items:center;border:1.5px solid #D3D1C7;border-radius:8px;background:#fff;overflow:hidden;">
+        <input id="bk-dlugo" type="number" min="150" max="320" placeholder="np. 230"
+          style="border:none;outline:none;padding:10px 12px;font-size:16px;width:100%;background:transparent;color:#2C2C2A;font-family:Georgia,serif;">
+        <span style="padding:0 12px;font-size:13px;color:#888780;border-left:1.5px solid #D3D1C7;white-space:nowrap;">cm</span>
+      </div>
+      <p id="bk-err-d" style="font-size:12px;color:#C0392B;margin-top:4px;display:none;">Podaj długość (150–320 cm)</p>
+    </div>
+  </div>
+
+  <!-- WARIANT -->
+  <p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#888780;margin-bottom:0.6rem;">Wariant</p>
+  <div style="display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;">
+    <button id="bk-v-c" onclick="bkSetVariant('caloroczna')"
+      style="flex:1;min-width:120px;padding:10px 8px;font-size:13px;font-family:Georgia,serif;cursor:pointer;border-radius:8px;border:1.5px solid #2C2C2A;background:#2C2C2A;color:#FAF8F4;transition:all 0.15s;">
+      Całoroczna
+    </button>
+    <button id="bk-v-z" onclick="bkSetVariant('zimowa')"
+      style="flex:1;min-width:120px;padding:10px 8px;font-size:13px;font-family:Georgia,serif;cursor:pointer;border-radius:8px;border:1.5px solid #D3D1C7;background:#fff;color:#5F5E5A;transition:all 0.15s;">
+      Zimowa (+20% wypełnienia)
+    </button>
+  </div>
+
+  <!-- MODEL -->
+  <p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#888780;margin-bottom:0.6rem;">Model</p>
+  <div style="display:flex;gap:10px;margin-bottom:1.5rem;flex-wrap:wrap;">
+    <div id="bk-m-deluxe" onclick="bkSetModel('deluxe')"
+      style="flex:1;min-width:140px;border:2px solid #2C2C2A;border-radius:10px;padding:14px;cursor:pointer;background:#F1EFE8;">
+      <div style="font-size:14px;font-weight:bold;margin-bottom:4px;color:#2C2C2A;">Deluxe</div>
+      <div style="font-size:12px;color:#5F5E5A;line-height:1.5;">100% puch gęsi – maksymalna lekkość, efekt chmurki</div>
+    </div>
+    <div id="bk-m-plus" onclick="bkSetModel('plus')"
+      style="flex:1;min-width:140px;border:1.5px solid #D3D1C7;border-radius:10px;padding:14px;cursor:pointer;background:#fff;">
+      <div style="font-size:14px;font-weight:bold;margin-bottom:4px;color:#2C2C2A;">Plus</div>
+      <div style="font-size:12px;color:#888780;line-height:1.5;">30% puch / 70% pierze – miękkie, klasyczne otulenie</div>
+    </div>
+    <div id="bk-m-gama" onclick="bkSetModel('gama')"
+      style="flex:1;min-width:140px;border:1.5px solid #D3D1C7;border-radius:10px;padding:14px;cursor:pointer;background:#fff;">
+      <div style="font-size:14px;font-weight:bold;margin-bottom:4px;color:#2C2C2A;">Gama</div>
+      <div style="font-size:12px;color:#888780;line-height:1.5;">100% pierze gęsie – tradycyjny ciężar, stabilne przykrycie</div>
+    </div>
+  </div>
+
+  <!-- PRZYCISK -->
+  <button onclick="bkPrzelicz()"
+    style="width:100%;padding:14px;font-size:15px;font-family:Georgia,serif;cursor:pointer;border-radius:8px;border:none;background:#2C2C2A;color:#FAF8F4;margin-bottom:1.5rem;letter-spacing:0.02em;">
+    Oblicz orientacyjną cenę
+  </button>
+
+  <!-- WYNIK -->
+  <div id="bk-wynik" style="display:none;border:1.5px solid #D3D1C7;border-radius:12px;background:#fff;padding:1.5rem;margin-bottom:1.5rem;">
+    <div style="display:flex;gap:12px;margin-bottom:1rem;flex-wrap:wrap;">
+      <div style="flex:1;min-width:140px;background:#FAF8F4;border-radius:8px;padding:1rem;">
+        <div style="font-size:12px;color:#888780;margin-bottom:4px;">Orientacyjna cena</div>
+        <div id="bk-cena" style="font-size:24px;color:#2C2C2A;">–</div>
+        <div id="bk-model-label" style="font-size:12px;color:#B4B2A9;margin-top:2px;">–</div>
+      </div>
+      <div style="flex:1;min-width:140px;background:#FAF8F4;border-radius:8px;padding:1rem;">
+        <div style="font-size:12px;color:#888780;margin-bottom:4px;">Twój rozmiar</div>
+        <div id="bk-rozmiar" style="font-size:24px;color:#2C2C2A;">–</div>
+        <div style="font-size:12px;color:#B4B2A9;margin-top:2px;">szycie na zamówienie</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:#888780;line-height:1.6;border-top:1px solid #F1EFE8;padding-top:0.75rem;">
+      Wycena jest orientacyjna. Ostateczna cena zostanie potwierdzona przez pracownię. Czas realizacji: 7–10 dni roboczych.
+    </div>
+    <div style="margin-top:1rem;">
+      <a id="bk-mailto" href="#"
+        style="display:block;width:100%;padding:13px;font-size:14px;font-family:Georgia,serif;cursor:pointer;border-radius:8px;border:1.5px solid #2C2C2A;background:#fff;color:#2C2C2A;text-align:center;text-decoration:none;box-sizing:border-box;">
+        Wyślij zapytanie o wycenę →
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var CENY = {
+    deluxe: {
+      caloroczna: [[140,200,560],[155,200,616],[200,200,784],[200,220,952]],
+      zimowa:     [[140,200,650],[155,200,706],[200,200,874],[200,220,1042]]
+    },
+    plus: {
+      caloroczna: [[140,200,480],[155,200,528],[200,200,680],[200,220,780]],
+      zimowa:     [[140,200,520],[155,200,568],[200,200,720],[200,220,820]]
+    },
+    gama: {
+      caloroczna: [[140,200,400],[155,200,440],[200,200,560],[200,220,680]],
+      zimowa:     [[140,200,440],[155,200,480],[200,200,600],[200,220,720]]
+    }
+  };
+  var MODEL_NAMES = {deluxe:'Bona Deluxe',plus:'Bona Plus',gama:'Bona Gama'};
+  var WARIANT_NAMES = {caloroczna:'całoroczna',zimowa:'zimowa'};
+  var model = 'deluxe';
+  var wariant = 'caloroczna';
+
+  window.bkSetModel = function(m) {
+    model = m;
+    ['deluxe','plus','gama'].forEach(function(k){
+      var el = document.getElementById('bk-m-'+k);
+      if(k === m){
+        el.style.border = '2px solid #2C2C2A';
+        el.style.background = '#F1EFE8';
+        el.querySelector('div:last-child').style.color = '#5F5E5A';
+      } else {
+        el.style.border = '1.5px solid #D3D1C7';
+        el.style.background = '#fff';
+        el.querySelector('div:last-child').style.color = '#888780';
+      }
+    });
+  };
+
+  window.bkSetVariant = function(v) {
+    wariant = v;
+    var bc = document.getElementById('bk-v-c');
+    var bz = document.getElementById('bk-v-z');
+    if(v === 'caloroczna'){
+      bc.style.background='#2C2C2A'; bc.style.color='#FAF8F4'; bc.style.borderColor='#2C2C2A';
+      bz.style.background='#fff'; bz.style.color='#5F5E5A'; bz.style.borderColor='#D3D1C7';
+    } else {
+      bz.style.background='#2C2C2A'; bz.style.color='#FAF8F4'; bz.style.borderColor='#2C2C2A';
+      bc.style.background='#fff'; bc.style.color='#5F5E5A'; bc.style.borderColor='#D3D1C7';
+    }
+  };
+
+  window.bkPrzelicz = function() {
+    var sVal = document.getElementById('bk-szer').value;
+    var dVal = document.getElementById('bk-dlugo').value;
+    var errS = document.getElementById('bk-err-s');
+    var errD = document.getElementById('bk-err-d');
+    errS.style.display='none'; errD.style.display='none';
+    var s = parseInt(sVal), d = parseInt(dVal);
+    var ok = true;
+    if(!sVal||isNaN(s)||s<80||s>320){errS.style.display='block';ok=false;}
+    if(!dVal||isNaN(d)||d<150||d>320){errD.style.display='block';ok=false;}
+    if(!ok) return;
+
+    var lista = CENY[model][wariant];
+    var jestStd = lista.some(function(r){return r[0]===s&&r[1]===d;});
+    var labelCena;
+
+    if(jestStd){
+      var std = lista.filter(function(r){return r[0]===s&&r[1]===d;})[0];
+      labelCena = std[2].toLocaleString('pl-PL')+' zł';
+    } else {
+      var best=null, bestPow=0;
+      lista.forEach(function(r){
+        if(r[0]<=s&&r[1]<=d){var p=r[0]*r[1];if(p>bestPow){bestPow=p;best=r;}}
+      });
+      if(!best) best=lista[0];
+      var wzrost=(s*d)/(best[0]*best[1]);
+      var base=best[2]*wzrost;
+      var mn=Math.round(base*1.05/10)*10;
+      var mx=Math.round(base*1.10/10)*10;
+      labelCena='ok. '+mn.toLocaleString('pl-PL')+'–'+mx.toLocaleString('pl-PL')+' zł';
+    }
+
+    document.getElementById('bk-cena').textContent = labelCena;
+    document.getElementById('bk-rozmiar').textContent = s+' × '+d+' cm';
+    document.getElementById('bk-model-label').textContent = MODEL_NAMES[model]+', '+WARIANT_NAMES[wariant];
+
+    var temat = encodeURIComponent('Zapytanie o kołdrę na wymiar: '+s+'×'+d+' cm – '+MODEL_NAMES[model]+' '+WARIANT_NAMES[wariant]);
+    var tresc = encodeURIComponent('Dzień dobry,\n\nChciałbym/chciałabym zamówić kołdrę na wymiar:\n\nRozmiar: '+s+' × '+d+' cm\nModel: '+MODEL_NAMES[model]+'\nWariant: '+WARIANT_NAMES[wariant]+'\nOrientacyjna cena: '+labelCena+'\n\nProszę o potwierdzenie wyceny i terminu realizacji.\n\nPozdrawiam,');
+    document.getElementById('bk-mailto').href = 'mailto:sklep@koldry-bona.pl?subject='+temat+'&body='+tresc;
+
+    document.getElementById('bk-wynik').style.display='block';
+    document.getElementById('bk-wynik').scrollIntoView({behavior:'smooth',block:'nearest'});
+  };
+})();
+</script>
