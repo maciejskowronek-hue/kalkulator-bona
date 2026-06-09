@@ -1,188 +1,273 @@
-<div id="bona-kalk" style="max-width:620px;margin:0 auto;font-family:Georgia,serif;color:#2C2C2A;padding:1rem 0;">
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator kołdry na wymiar – Bona</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia', serif; background: #FAF8F4; color: #2C2C2A; padding: 2rem 1rem; }
+  .kalk { max-width: 620px; margin: 0 auto; }
+  h1 { font-size: 22px; font-weight: normal; margin-bottom: 0.4rem; }
+  .subtitle { font-size: 14px; color: #888780; margin-bottom: 2rem; line-height: 1.6; }
+  .section-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #888780; margin-bottom: 0.6rem; }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1.5rem; }
+  .field label { display: block; font-size: 13px; color: #5F5E5A; margin-bottom: 6px; }
+  .input-wrap { display: flex; align-items: center; border: 1.5px solid #D3D1C7; border-radius: 8px; background: #fff; overflow: hidden; }
+  .input-wrap input { border: none; outline: none; padding: 10px 12px; font-size: 16px; width: 100%; background: transparent; color: #2C2C2A; font-family: Georgia, serif; }
+  .input-wrap .unit { padding: 0 12px; font-size: 13px; color: #888780; border-left: 1.5px solid #D3D1C7; white-space: nowrap; }
+  .input-wrap:focus-within { border-color: #2C2C2A; }
+  .field-error { font-size: 12px; color: #C0392B; margin-top: 4px; display: none; }
+  .toggle-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.5rem; }
+  .toggle-btn { padding: 10px 8px; font-size: 13px; font-family: Georgia, serif; cursor: pointer; border-radius: 8px; border: 1.5px solid #D3D1C7; background: #fff; color: #5F5E5A; transition: all 0.15s; }
+  .toggle-btn.active { border-color: #2C2C2A; background: #2C2C2A; color: #FAF8F4; }
+  .models { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+  .model-card { border: 1.5px solid #D3D1C7; border-radius: 10px; padding: 14px; cursor: pointer; background: #fff; transition: all 0.15s; }
+  .model-card.selected { border: 2px solid #2C2C2A; background: #F1EFE8; }
+  .model-name { font-size: 14px; font-weight: bold; margin-bottom: 4px; color: #2C2C2A; }
+  .model-desc { font-size: 12px; color: #888780; line-height: 1.5; }
+  .model-card.selected .model-desc { color: #5F5E5A; }
+  .btn-calc { width: 100%; padding: 14px; font-size: 15px; font-family: Georgia, serif; cursor: pointer; border-radius: 8px; border: none; background: #2C2C2A; color: #FAF8F4; margin-bottom: 1.5rem; letter-spacing: 0.02em; }
+  .btn-calc:hover { opacity: 0.85; }
+  .result-box { border: 1.5px solid #D3D1C7; border-radius: 12px; background: #fff; padding: 1.5rem; margin-bottom: 1.5rem; display: none; }
+  .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1rem; }
+  .metric { background: #FAF8F4; border-radius: 8px; padding: 1rem; }
+  .metric-label { font-size: 12px; color: #888780; margin-bottom: 4px; }
+  .metric-value { font-size: 24px; color: #2C2C2A; }
+  .metric-sub { font-size: 12px; color: #B4B2A9; margin-top: 2px; }
+  .result-note { font-size: 12px; color: #888780; line-height: 1.6; border-top: 1px solid #F1EFE8; padding-top: 0.75rem; margin-top: 0.75rem; }
+  .form-box { border: 1.5px solid #D3D1C7; border-radius: 12px; background: #fff; padding: 1.5rem; display: none; margin-bottom: 1.5rem; }
+  .form-title { font-size: 15px; color: #2C2C2A; margin-bottom: 0.4rem; }
+  .form-subtitle { font-size: 13px; color: #888780; line-height: 1.6; margin-bottom: 1.25rem; }
+  .form-field { margin-bottom: 1rem; }
+  .form-field label { display: block; font-size: 13px; color: #5F5E5A; margin-bottom: 6px; }
+  .form-field input[type="email"] { width: 100%; padding: 10px 12px; font-size: 14px; font-family: Georgia, serif; border: 1.5px solid #D3D1C7; border-radius: 8px; background: #fff; color: #2C2C2A; outline: none; }
+  .form-field input[type="email"]:focus { border-color: #2C2C2A; }
+  .checkbox-wrap { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 1.25rem; }
+  .checkbox-wrap input[type="checkbox"] { margin-top: 3px; flex-shrink: 0; width: 16px; height: 16px; cursor: pointer; accent-color: #2C2C2A; }
+  .checkbox-label { font-size: 11px; color: #888780; line-height: 1.6; cursor: pointer; }
+  .btn-submit { width: 100%; padding: 13px; font-size: 14px; font-family: Georgia, serif; cursor: pointer; border-radius: 8px; border: none; background: #2C2C2A; color: #FAF8F4; letter-spacing: 0.02em; }
+  .btn-submit:hover { opacity: 0.85; }
+  .success-box { text-align: center; padding: 3rem 1rem; display: none; }
+  .success-icon { font-size: 36px; margin-bottom: 1rem; color: #27AE60; }
+  .success-title { font-size: 18px; color: #2C2C2A; margin-bottom: 0.5rem; }
+  .success-sub { font-size: 13px; color: #888780; line-height: 1.7; }
+  @media (max-width: 480px) {
+    .models { grid-template-columns: 1fr; }
+    .result-grid { grid-template-columns: 1fr; }
+    .row-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="kalk">
 
-  <p style="font-size:13px;color:#888780;line-height:1.6;margin-bottom:2rem;">Podaj wymiary, wybierz model i sprawdź orientacyjną cenę.<br>Każda kołdra szyta jest po złożeniu zamówienia – realizacja 7–10 dni roboczych.</p>
+  <p class="subtitle">Podaj wymiary, wybierz model i sprawdź orientacyjną cenę.<br>Każda kołdra szyta jest po złożeniu zamówienia – realizacja 7–10 dni roboczych.</p>
 
-  <!-- WYMIARY -->
-  <p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#888780;margin-bottom:0.6rem;">Wymiary kołdry</p>
-  <div style="display:flex;gap:16px;margin-bottom:1.5rem;flex-wrap:wrap;">
-    <div style="flex:1;min-width:140px;">
-      <label style="display:block;font-size:13px;color:#5F5E5A;margin-bottom:6px;" for="bk-szer">Szerokość</label>
-      <div style="display:flex;align-items:center;border:1.5px solid #D3D1C7;border-radius:8px;background:#fff;overflow:hidden;">
-        <input id="bk-szer" type="number" min="80" max="320" placeholder="np. 160"
-          style="border:none;outline:none;padding:10px 12px;font-size:16px;width:100%;background:transparent;color:#2C2C2A;font-family:Georgia,serif;">
-        <span style="padding:0 12px;font-size:13px;color:#888780;border-left:1.5px solid #D3D1C7;white-space:nowrap;">cm</span>
+  <div class="section-label">Wymiary kołdry</div>
+  <div class="row-2">
+    <div class="field">
+      <label for="szer">Szerokość</label>
+      <div class="input-wrap">
+        <input type="number" id="szer" min="80" max="320" placeholder="np. 160">
+        <span class="unit">cm</span>
       </div>
-      <p id="bk-err-s" style="font-size:12px;color:#C0392B;margin-top:4px;display:none;">Podaj szerokość (80–320 cm)</p>
+      <div class="field-error" id="err-szer">Podaj szerokość (80–320 cm)</div>
     </div>
-    <div style="flex:1;min-width:140px;">
-      <label style="display:block;font-size:13px;color:#5F5E5A;margin-bottom:6px;" for="bk-dlugo">Długość</label>
-      <div style="display:flex;align-items:center;border:1.5px solid #D3D1C7;border-radius:8px;background:#fff;overflow:hidden;">
-        <input id="bk-dlugo" type="number" min="150" max="320" placeholder="np. 230"
-          style="border:none;outline:none;padding:10px 12px;font-size:16px;width:100%;background:transparent;color:#2C2C2A;font-family:Georgia,serif;">
-        <span style="padding:0 12px;font-size:13px;color:#888780;border-left:1.5px solid #D3D1C7;white-space:nowrap;">cm</span>
+    <div class="field">
+      <label for="dlugo">Długość</label>
+      <div class="input-wrap">
+        <input type="number" id="dlugo" min="150" max="320" placeholder="np. 230">
+        <span class="unit">cm</span>
       </div>
-      <p id="bk-err-d" style="font-size:12px;color:#C0392B;margin-top:4px;display:none;">Podaj długość (150–320 cm)</p>
+      <div class="field-error" id="err-dlugo">Podaj długość (150–320 cm)</div>
     </div>
   </div>
 
-  <!-- WARIANT -->
-  <p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#888780;margin-bottom:0.6rem;">Wariant</p>
-  <div style="display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;">
-    <button id="bk-v-c" onclick="bkSetVariant('caloroczna')"
-      style="flex:1;min-width:120px;padding:10px 8px;font-size:13px;font-family:Georgia,serif;cursor:pointer;border-radius:8px;border:1.5px solid #2C2C2A;background:#2C2C2A;color:#FAF8F4;transition:all 0.15s;">
-      Całoroczna
-    </button>
-    <button id="bk-v-z" onclick="bkSetVariant('zimowa')"
-      style="flex:1;min-width:120px;padding:10px 8px;font-size:13px;font-family:Georgia,serif;cursor:pointer;border-radius:8px;border:1.5px solid #D3D1C7;background:#fff;color:#5F5E5A;transition:all 0.15s;">
-      Zimowa (+20% wypełnienia)
-    </button>
+  <div class="section-label">Wariant</div>
+  <div class="toggle-row">
+    <button class="toggle-btn active" onclick="setVariant('caloroczna', this)">Całoroczna</button>
+    <button class="toggle-btn" onclick="setVariant('zimowa', this)">Zimowa (+20% wypełnienia)</button>
   </div>
 
-  <!-- MODEL -->
-  <p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#888780;margin-bottom:0.6rem;">Model</p>
-  <div style="display:flex;gap:10px;margin-bottom:1.5rem;flex-wrap:wrap;">
-    <div id="bk-m-deluxe" onclick="bkSetModel('deluxe')"
-      style="flex:1;min-width:140px;border:2px solid #2C2C2A;border-radius:10px;padding:14px;cursor:pointer;background:#F1EFE8;">
-      <div style="font-size:14px;font-weight:bold;margin-bottom:4px;color:#2C2C2A;">Deluxe</div>
-      <div style="font-size:12px;color:#5F5E5A;line-height:1.5;">100% puch gęsi – maksymalna lekkość, efekt chmurki</div>
+  <div class="section-label">Model</div>
+  <div class="models">
+    <div class="model-card selected" onclick="setModel('deluxe', this)">
+      <div class="model-name">Deluxe</div>
+      <div class="model-desc">100% puch gęsi – maksymalna lekkość, efekt chmurki</div>
     </div>
-    <div id="bk-m-plus" onclick="bkSetModel('plus')"
-      style="flex:1;min-width:140px;border:1.5px solid #D3D1C7;border-radius:10px;padding:14px;cursor:pointer;background:#fff;">
-      <div style="font-size:14px;font-weight:bold;margin-bottom:4px;color:#2C2C2A;">Plus</div>
-      <div style="font-size:12px;color:#888780;line-height:1.5;">30% puch / 70% pierze – miękkie, klasyczne otulenie</div>
+    <div class="model-card" onclick="setModel('plus', this)">
+      <div class="model-name">Plus</div>
+      <div class="model-desc">30% puch / 70% pierze – miękkie, klasyczne otulenie</div>
     </div>
-    <div id="bk-m-gama" onclick="bkSetModel('gama')"
-      style="flex:1;min-width:140px;border:1.5px solid #D3D1C7;border-radius:10px;padding:14px;cursor:pointer;background:#fff;">
-      <div style="font-size:14px;font-weight:bold;margin-bottom:4px;color:#2C2C2A;">Gama</div>
-      <div style="font-size:12px;color:#888780;line-height:1.5;">100% pierze gęsie – tradycyjny ciężar, stabilne przykrycie</div>
+    <div class="model-card" onclick="setModel('gama', this)">
+      <div class="model-name">Gama</div>
+      <div class="model-desc">100% pierze gęsie – tradycyjny ciężar, stabilne przykrycie</div>
     </div>
   </div>
 
-  <!-- PRZYCISK -->
-  <button onclick="bkPrzelicz()"
-    style="width:100%;padding:14px;font-size:15px;font-family:Georgia,serif;cursor:pointer;border-radius:8px;border:none;background:#2C2C2A;color:#FAF8F4;margin-bottom:1.5rem;letter-spacing:0.02em;">
-    Oblicz orientacyjną cenę
-  </button>
+  <button class="btn-calc" onclick="przelicz()">Oblicz orientacyjną cenę</button>
 
-  <!-- WYNIK -->
-  <div id="bk-wynik" style="display:none;border:1.5px solid #D3D1C7;border-radius:12px;background:#fff;padding:1.5rem;margin-bottom:1.5rem;">
-    <div style="display:flex;gap:12px;margin-bottom:1rem;flex-wrap:wrap;">
-      <div style="flex:1;min-width:140px;background:#FAF8F4;border-radius:8px;padding:1rem;">
-        <div style="font-size:12px;color:#888780;margin-bottom:4px;">Orientacyjna cena</div>
-        <div id="bk-cena" style="font-size:24px;color:#2C2C2A;">–</div>
-        <div id="bk-model-label" style="font-size:12px;color:#B4B2A9;margin-top:2px;">–</div>
+  <div class="result-box" id="wynik">
+    <div class="result-grid">
+      <div class="metric">
+        <div class="metric-label">Orientacyjna cena</div>
+        <div class="metric-value" id="cena-val">–</div>
+        <div class="metric-sub" id="model-val">–</div>
       </div>
-      <div style="flex:1;min-width:140px;background:#FAF8F4;border-radius:8px;padding:1rem;">
-        <div style="font-size:12px;color:#888780;margin-bottom:4px;">Twój rozmiar</div>
-        <div id="bk-rozmiar" style="font-size:24px;color:#2C2C2A;">–</div>
-        <div style="font-size:12px;color:#B4B2A9;margin-top:2px;">szycie na zamówienie</div>
+      <div class="metric">
+        <div class="metric-label">Twój rozmiar</div>
+        <div class="metric-value" id="rozmiar-val">–</div>
+        <div class="metric-sub">szycie na zamówienie</div>
       </div>
     </div>
-    <div style="font-size:12px;color:#888780;line-height:1.6;border-top:1px solid #F1EFE8;padding-top:0.75rem;">
-      Wycena jest orientacyjna. Ostateczna cena zostanie potwierdzona przez pracownię. Czas realizacji: 7–10 dni roboczych.
+    <div class="result-note">
+      Wycena jest orientacyjna. Ostateczna cena zostanie potwierdzona przez pracownię po złożeniu zapytania. Czas realizacji: 7–10 dni roboczych.
     </div>
-    <div style="margin-top:1rem;">
-      <a id="bk-mailto" href="#"
-        style="display:block;width:100%;padding:13px;font-size:14px;font-family:Georgia,serif;cursor:pointer;border-radius:8px;border:1.5px solid #2C2C2A;background:#fff;color:#2C2C2A;text-align:center;text-decoration:none;box-sizing:border-box;">
-        Wyślij zapytanie o wycenę →
-      </a>
+  </div>
+
+  <div class="form-box" id="formularz">
+    <div class="form-title">Chcesz zamówić tę kołdrę?</div>
+    <div class="form-subtitle">Zostaw swój adres e-mail – odezwiemy się, żebyś mógł złożyć zamówienie. Wraz z wiadomością prześlemy Ci parametry Twojej kalkulacji.</div>
+    <div class="form-field">
+      <label for="f-email">Adres e-mail *</label>
+      <input type="email" id="f-email" placeholder="jan@przyklad.pl">
     </div>
+    <div class="checkbox-wrap">
+      <input type="checkbox" id="f-zgoda">
+      <label class="checkbox-label" for="f-zgoda">Wyrażam zgodę na otrzymywanie od Pracowni Bona informacji handlowych drogą elektroniczną na podany adres e-mail, zgodnie z ustawą o świadczeniu usług drogą elektroniczną.</label>
+    </div>
+    <button class="btn-submit" onclick="wyslij()">Wyślij zapytanie o zamówienie →</button>
+  </div>
+
+  <div class="success-box" id="sukces">
+    <div class="success-icon">✓</div>
+    <div class="success-title">Gotowe – odezwiemy się wkrótce</div>
+    <div class="success-sub">Wysłaliśmy potwierdzenie na Twój adres e-mail.<br><br>Skontaktujemy się z Tobą, żebyś mógł złożyć zamówienie.<br>Czas realizacji kołdry na wymiar: 7–10 dni roboczych.</div>
   </div>
 
 </div>
 
 <script>
-(function(){
-  var CENY = {
-    deluxe: {
-      caloroczna: [[140,200,560],[155,200,616],[200,200,784],[200,220,952]],
-      zimowa:     [[140,200,650],[155,200,706],[200,200,874],[200,220,1042]]
-    },
-    plus: {
-      caloroczna: [[140,200,480],[155,200,528],[200,200,680],[200,220,780]],
-      zimowa:     [[140,200,520],[155,200,568],[200,200,720],[200,220,820]]
-    },
-    gama: {
-      caloroczna: [[140,200,400],[155,200,440],[200,200,560],[200,220,680]],
-      zimowa:     [[140,200,440],[155,200,480],[200,200,600],[200,220,720]]
-    }
-  };
-  var MODEL_NAMES = {deluxe:'Bona Deluxe',plus:'Bona Plus',gama:'Bona Gama'};
-  var WARIANT_NAMES = {caloroczna:'całoroczna',zimowa:'zimowa'};
-  var model = 'deluxe';
-  var wariant = 'caloroczna';
+const CENY = {
+  deluxe: {
+    caloroczna: [[140,200,560],[155,200,616],[200,200,784],[200,220,952]],
+    zimowa:     [[140,200,650],[155,200,706],[200,200,874],[200,220,1042]]
+  },
+  plus: {
+    caloroczna: [[140,200,480],[155,200,528],[200,200,680],[200,220,780]],
+    zimowa:     [[140,200,520],[155,200,568],[200,200,720],[200,220,820]]
+  },
+  gama: {
+    caloroczna: [[140,200,400],[155,200,440],[200,200,560],[200,220,680]],
+    zimowa:     [[140,200,440],[155,200,480],[200,200,600],[200,220,720]]
+  }
+};
 
-  window.bkSetModel = function(m) {
-    model = m;
-    ['deluxe','plus','gama'].forEach(function(k){
-      var el = document.getElementById('bk-m-'+k);
-      if(k === m){
-        el.style.border = '2px solid #2C2C2A';
-        el.style.background = '#F1EFE8';
-        el.querySelector('div:last-child').style.color = '#5F5E5A';
-      } else {
-        el.style.border = '1.5px solid #D3D1C7';
-        el.style.background = '#fff';
-        el.querySelector('div:last-child').style.color = '#888780';
-      }
+const MODEL_NAMES = { deluxe: 'Bona Deluxe', plus: 'Bona Plus', gama: 'Bona Gama' };
+const WARIANT_NAMES = { caloroczna: 'całoroczna', zimowa: 'zimowa' };
+
+let model = 'deluxe';
+let wariant = 'caloroczna';
+let lastResult = {};
+
+function setModel(m, el) {
+  model = m;
+  document.querySelectorAll('.model-card').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function setVariant(v, el) {
+  wariant = v;
+  document.querySelectorAll('.toggle-btn').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function przelicz() {
+  const sVal = document.getElementById('szer').value;
+  const dVal = document.getElementById('dlugo').value;
+  const errS = document.getElementById('err-szer');
+  const errD = document.getElementById('err-dlugo');
+  errS.style.display = 'none';
+  errD.style.display = 'none';
+
+  const s = parseInt(sVal), d = parseInt(dVal);
+  let ok = true;
+  if (!sVal || isNaN(s) || s < 80 || s > 320) { errS.style.display = 'block'; ok = false; }
+  if (!dVal || isNaN(d) || d < 150 || d > 320) { errD.style.display = 'block'; ok = false; }
+  if (!ok) return;
+
+  const lista = CENY[model][wariant];
+  const jestStd = lista.some(([sw, dl]) => sw === s && dl === d);
+  let labelCena;
+
+  if (jestStd) {
+    const std = lista.find(([sw, dl]) => sw === s && dl === d);
+    labelCena = std[2].toLocaleString('pl-PL') + ' zł';
+  } else {
+    let best = null, bestPow = 0;
+    lista.forEach(([sw, dl, cena]) => {
+      if (sw <= s && dl <= d) { const p = sw*dl; if (p > bestPow) { bestPow = p; best = [sw,dl,cena]; } }
     });
+    if (!best) best = lista[0];
+    const wzrost = (s * d) / (best[0] * best[1]);
+    const base = best[2] * wzrost;
+    const mn = Math.round(base * 1.05 / 10) * 10;
+    const mx = Math.round(base * 1.10 / 10) * 10;
+    labelCena = 'ok. ' + mn.toLocaleString('pl-PL') + '–' + mx.toLocaleString('pl-PL') + ' zł';
+  }
+
+  lastResult = { s, d, model: MODEL_NAMES[model], wariant: WARIANT_NAMES[wariant], cena: labelCena };
+
+  document.getElementById('cena-val').textContent = labelCena;
+  document.getElementById('rozmiar-val').textContent = s + ' × ' + d + ' cm';
+  document.getElementById('model-val').textContent = MODEL_NAMES[model] + ', ' + WARIANT_NAMES[wariant];
+
+  document.getElementById('wynik').style.display = 'block';
+  document.getElementById('formularz').style.display = 'block';
+  document.getElementById('wynik').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function wyslij() {
+  const email = document.getElementById('f-email').value.trim();
+  const zgoda = document.getElementById('f-zgoda').checked;
+
+  if (!email || !email.includes('@')) {
+    alert('Podaj poprawny adres e-mail.');
+    return;
+  }
+
+  const dane = {
+    access_key: 'af7b4628-00ee-4174-948c-d875eb6e9333',
+    subject: 'Zapytanie o kołdrę na wymiar: ' + lastResult.s + '×' + lastResult.d + ' cm – ' + lastResult.model,
+    from_name: 'Kalkulator Bona',
+    email: email,
+    'Adres e-mail klienta': email,
+    'Rozmiar': lastResult.s + ' × ' + lastResult.d + ' cm',
+    'Model': lastResult.model,
+    'Wariant': lastResult.wariant,
+    'Orientacyjna cena': lastResult.cena,
+    'Zgoda marketingowa': zgoda ? 'TAK' : 'NIE'
   };
 
-  window.bkSetVariant = function(v) {
-    wariant = v;
-    var bc = document.getElementById('bk-v-c');
-    var bz = document.getElementById('bk-v-z');
-    if(v === 'caloroczna'){
-      bc.style.background='#2C2C2A'; bc.style.color='#FAF8F4'; bc.style.borderColor='#2C2C2A';
-      bz.style.background='#fff'; bz.style.color='#5F5E5A'; bz.style.borderColor='#D3D1C7';
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dane)
+    });
+    const json = await res.json();
+    if (json.success) {
+      document.getElementById('formularz').style.display = 'none';
+      document.getElementById('wynik').style.display = 'none';
+      document.getElementById('sukces').style.display = 'block';
     } else {
-      bz.style.background='#2C2C2A'; bz.style.color='#FAF8F4'; bz.style.borderColor='#2C2C2A';
-      bc.style.background='#fff'; bc.style.color='#5F5E5A'; bc.style.borderColor='#D3D1C7';
+      alert('Coś poszło nie tak. Napisz do nas bezpośrednio: sklep@koldry-bona.pl');
     }
-  };
-
-  window.bkPrzelicz = function() {
-    var sVal = document.getElementById('bk-szer').value;
-    var dVal = document.getElementById('bk-dlugo').value;
-    var errS = document.getElementById('bk-err-s');
-    var errD = document.getElementById('bk-err-d');
-    errS.style.display='none'; errD.style.display='none';
-    var s = parseInt(sVal), d = parseInt(dVal);
-    var ok = true;
-    if(!sVal||isNaN(s)||s<80||s>320){errS.style.display='block';ok=false;}
-    if(!dVal||isNaN(d)||d<150||d>320){errD.style.display='block';ok=false;}
-    if(!ok) return;
-
-    var lista = CENY[model][wariant];
-    var jestStd = lista.some(function(r){return r[0]===s&&r[1]===d;});
-    var labelCena;
-
-    if(jestStd){
-      var std = lista.filter(function(r){return r[0]===s&&r[1]===d;})[0];
-      labelCena = std[2].toLocaleString('pl-PL')+' zł';
-    } else {
-      var best=null, bestPow=0;
-      lista.forEach(function(r){
-        if(r[0]<=s&&r[1]<=d){var p=r[0]*r[1];if(p>bestPow){bestPow=p;best=r;}}
-      });
-      if(!best) best=lista[0];
-      var wzrost=(s*d)/(best[0]*best[1]);
-      var base=best[2]*wzrost;
-      var mn=Math.round(base*1.05/10)*10;
-      var mx=Math.round(base*1.10/10)*10;
-      labelCena='ok. '+mn.toLocaleString('pl-PL')+'–'+mx.toLocaleString('pl-PL')+' zł';
-    }
-
-    document.getElementById('bk-cena').textContent = labelCena;
-    document.getElementById('bk-rozmiar').textContent = s+' × '+d+' cm';
-    document.getElementById('bk-model-label').textContent = MODEL_NAMES[model]+', '+WARIANT_NAMES[wariant];
-
-    var temat = encodeURIComponent('Zapytanie o kołdrę na wymiar: '+s+'×'+d+' cm – '+MODEL_NAMES[model]+' '+WARIANT_NAMES[wariant]);
-    var tresc = encodeURIComponent('Dzień dobry,\n\nChciałbym/chciałabym zamówić kołdrę na wymiar:\n\nRozmiar: '+s+' × '+d+' cm\nModel: '+MODEL_NAMES[model]+'\nWariant: '+WARIANT_NAMES[wariant]+'\nOrientacyjna cena: '+labelCena+'\n\nProszę o potwierdzenie wyceny i terminu realizacji.\n\nPozdrawiam,');
-    document.getElementById('bk-mailto').href = 'mailto:sklep@koldry-bona.pl?subject='+temat+'&body='+tresc;
-
-    document.getElementById('bk-wynik').style.display='block';
-    document.getElementById('bk-wynik').scrollIntoView({behavior:'smooth',block:'nearest'});
-  };
-})();
+  } catch(e) {
+    alert('Błąd połączenia. Napisz do nas bezpośrednio: sklep@koldry-bona.pl');
+  }
+}
 </script>
+</body>
+</html>
