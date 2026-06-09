@@ -6,9 +6,9 @@
 <title>Kalkulator kołdry na wymiar – Bona</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Georgia', serif; background: #FAF8F4; color: #2C2C2A; padding: 2rem 1rem; }
+  html, body { background: transparent; }
+  body { font-family: 'Georgia', serif; color: #2C2C2A; padding: 1rem 1rem 2rem 1rem; }
   .kalk { max-width: 620px; margin: 0 auto; }
-  h1 { font-size: 22px; font-weight: normal; margin-bottom: 0.4rem; }
   .subtitle { font-size: 14px; color: #888780; margin-bottom: 2rem; line-height: 1.6; }
   .section-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #888780; margin-bottom: 0.6rem; }
   .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1.5rem; }
@@ -60,7 +60,7 @@
 </style>
 </head>
 <body>
-<div class="kalk">
+<div class="kalk" id="kalk-root">
 
   <p class="subtitle">Podaj wymiary, wybierz model i sprawdź orientacyjną cenę.<br>Każda kołdra szyta jest po złożeniu zamówienia – realizacja 7–10 dni roboczych.</p>
 
@@ -143,7 +143,7 @@
   <div class="success-box" id="sukces">
     <div class="success-icon">✓</div>
     <div class="success-title">Gotowe – odezwiemy się wkrótce</div>
-    <div class="success-sub">Wysłaliśmy potwierdzenie na Twój adres e-mail.<br><br>Skontaktujemy się z Tobą, żebyś mógł złożyć zamówienie.<br>Czas realizacji kołdry na wymiar: 7–10 dni roboczych.</div>
+    <div class="success-sub">Dziękujemy! Skontaktujemy się z Tobą w celu omówienia szczegółów Twojej kalkulacji.</div>
   </div>
 
 </div>
@@ -166,10 +166,12 @@ const CENY = {
 
 const MODEL_NAMES = { deluxe: 'Bona Deluxe', plus: 'Bona Plus', gama: 'Bona Gama' };
 const WARIANT_NAMES = { caloroczna: 'całoroczna', zimowa: 'zimowa' };
+let model = 'deluxe', wariant = 'caloroczna', lastResult = {};
 
-let model = 'deluxe';
-let wariant = 'caloroczna';
-let lastResult = {};
+function sendHeight() {
+  const h = document.getElementById('kalk-root').scrollHeight + 32;
+  window.parent.postMessage({ type: 'bona-kalk-height', height: h }, '*');
+}
 
 function setModel(m, el) {
   model = m;
@@ -186,15 +188,12 @@ function setVariant(v, el) {
 function przelicz() {
   const sVal = document.getElementById('szer').value;
   const dVal = document.getElementById('dlugo').value;
-  const errS = document.getElementById('err-szer');
-  const errD = document.getElementById('err-dlugo');
-  errS.style.display = 'none';
-  errD.style.display = 'none';
-
+  document.getElementById('err-szer').style.display = 'none';
+  document.getElementById('err-dlugo').style.display = 'none';
   const s = parseInt(sVal), d = parseInt(dVal);
   let ok = true;
-  if (!sVal || isNaN(s) || s < 80 || s > 320) { errS.style.display = 'block'; ok = false; }
-  if (!dVal || isNaN(d) || d < 150 || d > 320) { errD.style.display = 'block'; ok = false; }
+  if (!sVal || isNaN(s) || s < 80 || s > 320) { document.getElementById('err-szer').style.display = 'block'; ok = false; }
+  if (!dVal || isNaN(d) || d < 150 || d > 320) { document.getElementById('err-dlugo').style.display = 'block'; ok = false; }
   if (!ok) return;
 
   const lista = CENY[model][wariant];
@@ -218,24 +217,19 @@ function przelicz() {
   }
 
   lastResult = { s, d, model: MODEL_NAMES[model], wariant: WARIANT_NAMES[wariant], cena: labelCena };
-
   document.getElementById('cena-val').textContent = labelCena;
   document.getElementById('rozmiar-val').textContent = s + ' × ' + d + ' cm';
   document.getElementById('model-val').textContent = MODEL_NAMES[model] + ', ' + WARIANT_NAMES[wariant];
-
   document.getElementById('wynik').style.display = 'block';
   document.getElementById('formularz').style.display = 'block';
-  document.getElementById('wynik').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  setTimeout(sendHeight, 100);
 }
 
 async function wyslij() {
   const email = document.getElementById('f-email').value.trim();
   const zgoda = document.getElementById('f-zgoda').checked;
-
-  if (!email || !email.includes('@')) {
-    alert('Podaj poprawny adres e-mail.');
-    return;
-  }
+  if (!email || !email.includes('@')) { alert('Podaj poprawny adres e-mail.'); return; }
 
   const dane = {
     access_key: 'af7b4628-00ee-4174-948c-d875eb6e9333',
@@ -261,6 +255,7 @@ async function wyslij() {
       document.getElementById('formularz').style.display = 'none';
       document.getElementById('wynik').style.display = 'none';
       document.getElementById('sukces').style.display = 'block';
+      setTimeout(sendHeight, 100);
     } else {
       alert('Coś poszło nie tak. Napisz do nas bezpośrednio: sklep@koldry-bona.pl');
     }
@@ -268,6 +263,10 @@ async function wyslij() {
     alert('Błąd połączenia. Napisz do nas bezpośrednio: sklep@koldry-bona.pl');
   }
 }
+
+// Wysyłaj wysokość przy każdej zmianie rozmiaru
+window.addEventListener('load', sendHeight);
+window.addEventListener('resize', sendHeight);
 </script>
 </body>
 </html>
